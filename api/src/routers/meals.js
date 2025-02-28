@@ -58,14 +58,19 @@ mealsRouter.get("/first-meal", async (req, res) => {
         ? "SELECT * FROM meal ORDER BY id ASC LIMIT 1;"
         : "SHOW TABLES;";
     const tables = await knex.raw(firstMealQuery);
-    res.json({ tables });
+    const meal = tables[0][0];
+
+    if (!meal) {
+      return res.status(404).json({ error: "No meals found" });
+    }
+    res.json(meal);
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-//First Meal
+//Last Meal
 mealsRouter.get("/last-meal", async (req, res) => {
   try {
     const lastMealQuery =
@@ -73,7 +78,13 @@ mealsRouter.get("/last-meal", async (req, res) => {
         ? "SELECT * FROM meal ORDER BY id DESC LIMIT 1;"
         : "SHOW TABLES;";
     const tables = await knex.raw(lastMealQuery);
-    res.json({ tables });
+    const meal = tables[0][0];
+
+    if (!meal) {
+      return res.status(404).json({ error: "No meals found" });
+    }
+
+    res.json(meal);
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
