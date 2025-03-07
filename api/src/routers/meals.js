@@ -47,10 +47,7 @@ mealsRouter.get("/all-meals", async (req, res) => {
 //First Meal
 mealsRouter.get("/first-meal", async (req, res) => {
   try {
-    const firstMealQuery =
-      process.env.DB_CLIENT === "mysql2"
-        ? "SELECT * FROM meal ORDER BY id ASC LIMIT 1;"
-        : "SHOW TABLES;";
+    const firstMealQuery = "SELECT * FROM meal ORDER BY id ASC LIMIT 1;";
     const [meals, schema] = await knex.raw(firstMealQuery);
     const meal = meals[0][0];
 
@@ -67,10 +64,7 @@ mealsRouter.get("/first-meal", async (req, res) => {
 //Last Meal
 mealsRouter.get("/last-meal", async (req, res) => {
   try {
-    const lastMealQuery =
-      process.env.DB_CLIENT === "mysql2"
-        ? "SELECT * FROM meal ORDER BY id DESC LIMIT 1;"
-        : "SHOW TABLES;";
+    const lastMealQuery = "SELECT * FROM meal ORDER BY id DESC LIMIT 1;";
     const [meals, schema] = await knex.raw(lastMealQuery);
     const meal = meals[0][0];
 
