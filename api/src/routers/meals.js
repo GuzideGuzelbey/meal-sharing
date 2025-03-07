@@ -7,10 +7,7 @@ const mealsRouter = express.Router();
 // Future Meals
 mealsRouter.get("/future-meals", async (req, res) => {
   try {
-    const futureMealsQuery =
-      process.env.DB_CLIENT === "mysql2"
-        ? "SELECT * FROM meal WHERE `when` > NOW() ;"
-        : "SHOW TABLES;";
+    const futureMealsQuery = "SELECT * FROM meal WHERE `when` > NOW() ;";
     const tables = await knex.raw(futureMealsQuery);
     res.json({ tables });
   } catch (error) {
