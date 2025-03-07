@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 
 const apiRouter = express.Router();
 
-// This nested router example can also be replaced with your own sub-router
 apiRouter.use("/meals", mealsRouter);
 
 app.use("/api", apiRouter);
