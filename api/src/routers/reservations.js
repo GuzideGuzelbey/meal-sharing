@@ -16,4 +16,20 @@ reservationsRouter.get("/", async (req, res) => {
   }
 });
 
+// POST New Reservation
+reservationsRouter.post("/", async (req, res) => {
+  const newReservation = req.body;
+  try {
+    const reservationID = await knex("reservation").insert(newReservation);
+    console.log(newReservation);
+    res.status(201).json({
+      newReservation,
+      message: "Successfully inserted new reservation",
+    });
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export default reservationsRouter;
