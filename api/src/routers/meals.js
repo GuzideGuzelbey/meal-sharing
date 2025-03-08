@@ -22,7 +22,9 @@ mealsRouter.post("/", async (req, res) => {
   try {
     const mealID = await knex("meal").insert(newMeal);
     console.log(mealID);
-    res.status(201).json({ message: "Successfully inserted new meal" });
+    res
+      .status(201)
+      .json({ newMeal, message: "Successfully inserted new meal" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -39,6 +41,22 @@ mealsRouter.get("/:id", async (req, res) => {
     }
     res.json({ meal });
     console.log(meal);
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// PUT Update the meal by id
+mealsRouter.put("/:id", async (req, res) => {
+  const ID = req.params.id;
+  const updatedMeal = req.body;
+  try {
+    const meal = await knex("meal").where({ id: ID }).update(updatedMeal);
+    if (!meal) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+    res.json({ updatedMeal });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
