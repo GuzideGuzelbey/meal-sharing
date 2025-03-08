@@ -28,4 +28,21 @@ mealsRouter.post("/", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+//GET	Return the meal by id
+mealsRouter.get("/:id", async (req, res) => {
+  const ID = req.params.id;
+  try {
+    const meal = await knex("meal").select("*").where({ id: ID }).first();
+    if (!meal) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+    res.json({ meal });
+    console.log(meal);
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export default mealsRouter;
