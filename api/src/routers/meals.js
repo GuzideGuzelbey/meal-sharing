@@ -63,7 +63,7 @@ mealsRouter.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE	Delete the meal by id
+// DELETE the meal by id
 
 mealsRouter.delete("/:id", async (req, res) => {
   const ID = req.params.id;
