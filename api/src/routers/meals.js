@@ -9,7 +9,7 @@ mealsRouter.get("/", async (req, res) => {
   try {
     const meals = await knex("meal").select("*");
     console.log(meals);
-    res.json({ meals });
+    res.status(200).json({ meals });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -39,7 +39,7 @@ mealsRouter.get("/:id", async (req, res) => {
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.json({ meal });
+    res.status(201).json({ meal });
     console.log(meal);
   } catch (error) {
     console.error("DB query failed:", error.message);
@@ -56,7 +56,24 @@ mealsRouter.put("/:id", async (req, res) => {
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.json({ updatedMeal });
+    res.status(200).json({ updatedMeal });
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// DELETE	Delete the meal by id
+
+mealsRouter.delete("/:id", async (req, res) => {
+  const ID = req.params.id;
+  const deletedMeal = req.body;
+  try {
+    const meal = await knex("meal").where({ id: ID }).del(deletedMeal);
+    if (!meal) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+    res.status(200).json({ message: "Meal deleted successfully" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
