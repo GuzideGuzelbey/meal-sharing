@@ -32,4 +32,23 @@ reservationsRouter.post("/", async (req, res) => {
   }
 });
 
+//GET Return a reservation by id
+reservationsRouter.get("/:id", async (req, res) => {
+  const ID = req.params.id;
+  try {
+    const reservation = await knex("reservation")
+      .select("*")
+      .where({ id: ID })
+      .first();
+    if (!reservation) {
+      return res.status(404).json({ error: "Reservation not found" });
+    }
+    res.status(201).json({ reservation });
+    console.log(reservation);
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export default reservationsRouter;
