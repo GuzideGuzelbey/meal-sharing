@@ -6,21 +6,45 @@ const mealsRouter = express.Router();
 
 // GET All Meals
 mealsRouter.get("/", async (req, res) => {
-  let query = knex("meal").select("*");
+  let query = knex("meal").select([
+    "meal.id",
+    "meal.title",
+    "meal.description",
+    "meal.location",
+    "meal.when",
+    "meal.max_reservations",
+    "meal.price",
+    "meal.created_date",
+  ]);
 
+  //maxPrice query parameter
   if (req.query.maxPrice) {
     const maxPrice = parseFloat(req.query.maxPrice);
     if (!isNaN(maxPrice)) {
-      query = query.where("price", "<=", maxPrice);
+      query.where("price", "<=", maxPrice);
     }
   }
-  try {
-    const meals = await query;
-    console.log(meals);
-    res.status(200).json({ meals });
-  } catch (error) {
-    console.error("DB query failed:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+  // availableReservations query parameter
+  if (req.query.availableReservations) {
+    const available = req.query.availableReservations === "true";
+    query
+      .leftJoin("reservation", "meal.id", "reservation.meal_id")
+      .count("reservation.id as total_reservations")
+      .groupBy([
+        "meal.id",
+        "meal.title",
+        "meal.description",
+        "meal.location",
+        "meal.when",
+        "meal.max_reservations",
+        "meal.price",
+        "meal.created_date",
+      ])
+      .having(
+        "max_reservations",
+        available ? ">" : "<=",
+        knex.raw("COALESCE(COUNT(reservation.id), 0)")
+      );
   }
 });
 
@@ -50,8 +74,10 @@ mealsRouter.get("/:id", async (req, res) => {
     res.status(201).json({ meal });
     console.log(meal);
   } catch (error) {
-    console.error("DB query failed:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("DB query failed:", error);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 });
 
