@@ -48,6 +48,25 @@ mealsRouter.get("/", async (req, res) => {
   }
 });
 
+// title query parameter
+if (req.query.title) {
+  let title = req.query.title;
+  if (typeof title === "object" && title !== null) {
+    title = title.title;
+  }
+  title = String(title);
+  console.log("Extracted Title:", title);
+  query.whereILike("meal.title", `%${title}%`);
+}
+try {
+  const meals = await query;
+  console.log(meals);
+  res.status(200).json({ meals });
+} catch (error) {
+  console.error("DB query failed:", error.message);
+  res.status(500).json({ error: "Internal Server Error" });
+}
+
 // POST New Meal
 mealsRouter.post("/", async (req, res) => {
   const newMeal = req.body;
