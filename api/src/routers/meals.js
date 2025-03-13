@@ -6,8 +6,16 @@ const mealsRouter = express.Router();
 
 // GET All Meals
 mealsRouter.get("/", async (req, res) => {
+  let query = knex("meal").select("*");
+
+  if (req.query.maxPrice) {
+    const maxPrice = parseFloat(req.query.maxPrice);
+    if (!isNaN(maxPrice)) {
+      query = query.where("price", "<=", maxPrice);
+    }
+  }
   try {
-    const meals = await knex("meal").select("*");
+    const meals = await query;
     console.log(meals);
     res.status(200).json({ meals });
   } catch (error) {
