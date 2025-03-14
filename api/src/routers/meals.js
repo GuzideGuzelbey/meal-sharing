@@ -202,4 +202,26 @@ mealsRouter.delete("/:id", async (req, res) => {
   }
 });
 
+// GET Returns all reviews for a specific meal
+mealsRouter.get("/:meal_id/reviews", async (req, res) => {
+  try {
+    const mealId = req.params.meal_id;
+
+    const reviews = await knex("review")
+      .select("review.*")
+      .where("meal_id", mealId);
+
+    if (reviews.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No reviews found for this meal" });
+    }
+
+    return res.status(200).json({ meal_id: mealId, reviews });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export default mealsRouter;
