@@ -4,78 +4,80 @@ import knex from "../database_client.js";
 
 const mealsRouter = express.Router();
 
-// Future Meals
-mealsRouter.get("/future-meals", async (req, res) => {
+// GET All Meals
+mealsRouter.get("/", async (req, res) => {
   try {
-    const futureMealsQuery = "SELECT * FROM meal WHERE `when` > NOW() ;";
-    const [meals, schema] = await knex.raw(futureMealsQuery);
-    res.json({ meals });
+    const meals = await knex("meal").select("*");
+    console.log(meals);
+    res.status(200).json({ meals });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-//Past Meals
-
-mealsRouter.get("/past-meals", async (req, res) => {
+// POST New Meal
+mealsRouter.post("/", async (req, res) => {
+  const newMeal = req.body;
   try {
-    const pastMealsQuery =
-      process.env.DB_CLIENT === "mysql2"
-        ? "SELECT * FROM meal WHERE `when` < NOW() ;"
-        : "SHOW TABLES;";
-    const [meals, schema] = await knex.raw(pastMealsQuery);
-    res.json({ meals });
+    const mealID = await knex("meal").insert(newMeal);
+    console.log(mealID);
+    res
+      .status(201)
+      .json({ newMeal, message: "Successfully inserted new meal" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// All Meals
-mealsRouter.get("/all-meals", async (req, res) => {
+//GET	Return the meal by id
+mealsRouter.get("/:id", async (req, res) => {
+  const ID = req.params.id;
   try {
-    const allMealsQuery = "SELECT * FROM meal;";
-    const [meals, schema] = await knex.raw(allMealsQuery);
-    res.json({ meals });
-  } catch (error) {
-    console.error("DB query failed:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-//First Meal
-mealsRouter.get("/first-meal", async (req, res) => {
-  try {
-    const firstMealQuery = "SELECT * FROM meal ORDER BY id ASC LIMIT 1;";
-    const [meals, schema] = await knex.raw(firstMealQuery);
-    const meal = meals[0][0];
-
+    const meal = await knex("meal").select("*").where({ id: ID }).first();
     if (!meal) {
-      return res.status(404).json({ error: "No meals found" });
+      return res.status(404).json({ error: "Meal not found" });
     }
-    res.json(meal);
+    res.status(201).json({ meal });
+    console.log(meal);
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-//Last Meal
-mealsRouter.get("/last-meal", async (req, res) => {
+// PUT Update the meal by id
+mealsRouter.put("/:id", async (req, res) => {
+  const ID = req.params.id;
+  const updatedMeal = req.body;
   try {
-    const lastMealQuery = "SELECT * FROM meal ORDER BY id DESC LIMIT 1;";
-    const [meals, schema] = await knex.raw(lastMealQuery);
-    const meal = meals[0][0];
-
+    const meal = await knex("meal").where({ id: ID }).update(updatedMeal);
     if (!meal) {
-      return res.status(404).json({ error: "No meals found" });
+      return res.status(404).json({ error: "Meal not found" });
     }
-
-    res.json(meal);
+    res.status(200).json({ updatedMeal });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// DELETE the meal by id
+
+mealsRouter.delete("/:id", async (req, res) => {
+  const ID = req.params.id;
+  const deletedMeal = req.body;
+  try {
+    const meal = await knex("meal").where({ id: ID }).del(deletedMeal);
+    if (!meal) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+    res.status(200).json({ message: "Meal deleted successfully" });
+  } catch (error) {
+    console.error("DB query failed:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 export default mealsRouter;
