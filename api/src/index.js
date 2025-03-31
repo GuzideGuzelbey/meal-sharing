@@ -2,8 +2,9 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import knex from "./database_client.js";
 import mealsRouter from "./routers/meals.js";
+import reservationsRouter from "./routers/reservations.js";
+import reviewsRouter from "./routers/reviews.js";
 
 const app = express();
 app.use(cors());
@@ -12,6 +13,8 @@ app.use(bodyParser.json());
 const apiRouter = express.Router();
 
 apiRouter.use("/meals", mealsRouter);
+apiRouter.use("/reservations", reservationsRouter);
+apiRouter.use("/reviews", reviewsRouter);
 
 app.use("/api", apiRouter);
 
