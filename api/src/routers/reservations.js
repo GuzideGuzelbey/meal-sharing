@@ -23,6 +23,7 @@ reservationsRouter.post("/", async (req, res) => {
     const reservationID = await knex("reservation").insert(newReservation);
     console.log(newReservation);
     res.status(201).json({
+      reservationID,
       newReservation,
       message: "Successfully inserted new reservation",
     });
@@ -34,16 +35,16 @@ reservationsRouter.post("/", async (req, res) => {
 
 //GET Return a reservation by id
 reservationsRouter.get("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   try {
     const reservation = await knex("reservation")
       .select("*")
-      .where({ id: ID })
+      .where({ id })
       .first();
     if (!reservation) {
       return res.status(404).json({ error: "Reservation not found" });
     }
-    res.status(201).json({ reservation });
+    res.status(200).json({ id, reservation });
     console.log(reservation);
   } catch (error) {
     console.error("DB query failed:", error.message);
@@ -53,16 +54,16 @@ reservationsRouter.get("/:id", async (req, res) => {
 
 // PUT Update the reservation by id
 reservationsRouter.put("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const updatedReservation = req.body;
   try {
     const reservation = await knex("reservation")
-      .where({ id: ID })
+      .where({ id })
       .update(updatedReservation);
     if (!reservation) {
       return res.status(404).json({ error: "Reservation not found" });
     }
-    res.status(200).json({ updatedReservation });
+    res.status(200).json({ id, updatedReservation });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -72,16 +73,16 @@ reservationsRouter.put("/:id", async (req, res) => {
 // DELETE the reservation by id
 
 reservationsRouter.delete("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const deletedReservation = req.body;
   try {
     const reservation = await knex("reservation")
-      .where({ id: ID })
+      .where({ id })
       .del(deletedReservation);
     if (!reservation) {
       return res.status(404).json({ error: "Reservation not found" });
     }
-    res.status(200).json({ message: "Reservation deleted successfully" });
+    res.status(204).json({ message: "Reservation deleted successfully" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });

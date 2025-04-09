@@ -39,7 +39,7 @@ mealsRouter.get("/:id", async (req, res) => {
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.status(200).json({ meal });
+    res.status(200).json({ id, meal });
     console.log(meal);
   } catch (error) {
     console.error("DB query failed:", error.message);
@@ -49,10 +49,10 @@ mealsRouter.get("/:id", async (req, res) => {
 
 // PUT Update the meal by id
 mealsRouter.put("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const updatedMeal = req.body;
   try {
-    const meal = await knex("meal").where({ id: ID }).update(updatedMeal);
+    const meal = await knex("meal").where({ id }).update(updatedMeal);
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
@@ -66,10 +66,10 @@ mealsRouter.put("/:id", async (req, res) => {
 // DELETE the meal by id
 
 mealsRouter.delete("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const deletedMeal = req.body;
   try {
-    const meal = await knex("meal").where({ id: ID }).del(deletedMeal);
+    const meal = await knex("meal").where({ id }).del(deletedMeal);
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
