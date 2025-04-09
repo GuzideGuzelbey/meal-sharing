@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Meal from "./Meal";
+import styles from "./page.module.css";
 
 export default function MealsList() {
   const [meals, setMeals] = useState([]);
@@ -15,19 +17,12 @@ export default function MealsList() {
   }, []);
 
   return (
-    <div>
-      <h1>Here are Your Meals</h1>
-      {meals.map((meal, index) => (
-        <div key={index}>
-          <h2>{meal.title}</h2>
-          <p>{meal.description}</p>
-          <p
-            style={{ fontWeight: 700, fontSize: "0.9rem", fontStyle: "italic" }}
-          >
-            {meal.price}
-          </p>
-        </div>
-      ))}
-    </div>
+    <section className="mealsContainer">
+      <div className={styles.mealsGrid}>
+        {meals.map((meal) => (
+          <Meal key={meal.id} meal={meal} />
+        ))}
+      </div>
+    </section>
   );
 }

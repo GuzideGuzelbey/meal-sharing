@@ -1,0 +1,40 @@
+.mealsContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+}
+
+.mealsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.mealCard {
+  margin-top: 1rem;
+  border-radius: 8px;
+  background-color: violet;
+}
+
+.mealContent {
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.mealImg {
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+}
+
+.button {
+  margin-bottom: 0.4rem;
+  border-radius: 6px;
+  border-style: none;
+  max-width: max-content;
+  height: 1.6rem;
+  background-color: rgba(102, 25, 196, 0.744);
+  color: antiquewhite;
+  font-weight: 500;
+}
