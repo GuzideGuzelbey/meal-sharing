@@ -119,16 +119,14 @@ mealsRouter.get("/", async (req, res) => {
       }
     }
 
-    let meals = await query;
-
     // limit query parameter
     if (req.query.limit) {
       const limit = parseInt(req.query.limit);
       if (!isNaN(limit) && limit > 0) {
-        meals = meals.slice(0, limit);
+        query = query.limit(limit);
       }
     }
-
+    const meals = await query;
     return res.status(200).json({ totalMeals: meals.length, meals });
   } catch (error) {
     console.error("DB query failed", error.message);
