@@ -2,36 +2,9 @@ import MealDetail from "./MealDetail";
 import styles from "./meals.module.css";
 import Image from "next/image";
 
-function generateSlug(title) {
-  const charMap = {
-    ö: "o",
-    ç: "c",
-    ş: "s",
-    ı: "i",
-    ğ: "g",
-    ü: "u",
-    Ö: "o",
-    Ç: "c",
-    Ş: "s",
-    İ: "i",
-    Ğ: "g",
-    Ü: "u",
-  };
-  return title
-    .trim()
-    .toLowerCase()
-    .replace(/[öçşığüÖÇŞİĞÜ]/g, (match) => charMap[match] || match)
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\-]/g, "");
-}
-
 export default function Meal({ meal }) {
-  const imageFilename = meal.image
-    ? meal.image
-    : `${generateSlug(meal.title)}.jpg`;
-  const imageSrc = imageFilename.includes("/")
-    ? `/${imageFilename}`
-    : `/meals/${imageFilename}`;
+  console.log("Meal object:", meal);
+  const imageSrc = meal.image ? `/${meal.image.trim()}` : null;
 
   const openCardDetails = () => {
     return <MealDetail />;
@@ -43,13 +16,18 @@ export default function Meal({ meal }) {
 
   return (
     <div className={styles.mealCard}>
-      <Image
-        className={styles.mealImg}
-        src={imageSrc}
-        alt={meal.title}
-        width={300}
-        height={200}
-      />
+      {imageSrc ? (
+        <Image
+          className={styles.mealImg}
+          src={`/${meal.image}`}
+          alt={meal.title}
+          width={300}
+          height={200}
+        />
+      ) : (
+        <div className={styles.mealImg}>Image not available!</div>
+      )}
+
       <div className={styles.mealContent}>
         <h3 className={styles.mealTitle}>{meal.title}</h3>
         <p>
