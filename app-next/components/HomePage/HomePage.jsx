@@ -2,12 +2,18 @@
 
 import "./HomePage.css";
 import MealsList from "../MealsList";
+import styles from "../meals.module.css";
 
-// Feel free to replace the content of this component with your own
 function HomePage() {
   return (
     <>
-      <MealsList />
+      <nav className="navbar">Navbar Placeholder</nav>
+      <main className="main">
+        <section className={styles.mealsContainer}>
+          <MealsList />
+        </section>
+        <footer className="footerish">Footer Placeholder</footer>
+      </main>
     </>
   );
 }

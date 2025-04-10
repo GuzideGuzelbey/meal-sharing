@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Meal from "./Meal";
-import styles from "./page.module.css";
+import styles from "./meals.module.css";
 
 export default function MealsList() {
   const [meals, setMeals] = useState([]);
@@ -17,12 +17,10 @@ export default function MealsList() {
   }, []);
 
   return (
-    <section className="mealsContainer">
-      <div className={styles.mealsGrid}>
-        {meals.map((meal) => (
-          <Meal key={meal.id} meal={meal} />
-        ))}
-      </div>
-    </section>
+    <div className={styles.mealsGrid}>
+      {meals.map((meal) => (
+        <Meal key={meal.id} meal={meal} />
+      ))}
+    </div>
   );
 }
