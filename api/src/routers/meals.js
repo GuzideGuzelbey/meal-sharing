@@ -119,16 +119,14 @@ mealsRouter.get("/", async (req, res) => {
       }
     }
 
-    let meals = await query;
-
     // limit query parameter
     if (req.query.limit) {
       const limit = parseInt(req.query.limit);
       if (!isNaN(limit) && limit > 0) {
-        meals = meals.slice(0, limit);
+        query = query.limit(limit);
       }
     }
-
+    const meals = await query;
     return res.status(200).json({ totalMeals: meals.length, meals });
   } catch (error) {
     console.error("DB query failed", error.message);
@@ -140,11 +138,11 @@ mealsRouter.get("/", async (req, res) => {
 mealsRouter.post("/", async (req, res) => {
   const newMeal = req.body;
   try {
-    const mealID = await knex("meal").insert(newMeal);
-    console.log(mealID);
+    const [id] = await knex("meal").insert(newMeal);
+    console.log(id);
     res
-      .status(201)
-      .json({ newMeal, message: "Successfully inserted new meal" });
+      .status(200)
+      .json({ id, ...newMeal, message: "Successfully inserted new meal" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -153,13 +151,13 @@ mealsRouter.post("/", async (req, res) => {
 
 //GET	Return the meal by id
 mealsRouter.get("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   try {
-    const meal = await knex("meal").select("*").where({ id: ID }).first();
+    const meal = await knex("meal").select("*").where({ id }).first();
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.status(201).json({ meal });
+    res.status(200).json({ id, meal });
     console.log(meal);
   } catch (error) {
     console.error("DB query failed:", error);
@@ -171,10 +169,10 @@ mealsRouter.get("/:id", async (req, res) => {
 
 // PUT Update the meal by id
 mealsRouter.put("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const updatedMeal = req.body;
   try {
-    const meal = await knex("meal").where({ id: ID }).update(updatedMeal);
+    const meal = await knex("meal").where({ id }).update(updatedMeal);
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
@@ -188,14 +186,14 @@ mealsRouter.put("/:id", async (req, res) => {
 // DELETE the meal by id
 
 mealsRouter.delete("/:id", async (req, res) => {
-  const ID = req.params.id;
+  const { id } = req.params;
   const deletedMeal = req.body;
   try {
-    const meal = await knex("meal").where({ id: ID }).del(deletedMeal);
+    const meal = await knex("meal").where({ id }).del(deletedMeal);
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.status(200).json({ message: "Meal deleted successfully" });
+    res.status(204).json({ message: "Meal deleted successfully" });
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
