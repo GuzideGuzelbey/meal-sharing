@@ -6,19 +6,19 @@ import CssBaseline from "@mui/material/CssBaseline";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#ffffff", // navbar background
-      contrastText: "#4A772F", // text color on primary
+      main: "#ffffff",
+      contrastText: "#4A772F",
     },
     secondary: {
-      main: "#F2A900", // searchbox hover background
+      main: "#F2A900",
     },
     background: {
-      default: "#ffffff", // default page backgroun
-      paper: "#f5f5f5", // drawer background
+      default: "#ffffff",
+      paper: "#f5f5f5",
     },
     text: {
-      primary: "#222222", // main text color
-      secondary: "#666666", // lighter text
+      primary: "#222222",
+      secondary: "#666666",
       logo: "#556B2F",
     },
   },
@@ -35,7 +35,7 @@ const theme = createTheme({
       fontSize: "1.6rem",
     },
     navItem: {
-      fontSize: "1.2rem",
+      fontSize: "1.1rem",
       fontWeight: 500,
     },
     button: {
@@ -46,6 +46,7 @@ const theme = createTheme({
   shape: {
     borderRadius: 2.5,
   },
+  spacing: 8,
 });
 
 export default function ThemeRegistry({ children }) {

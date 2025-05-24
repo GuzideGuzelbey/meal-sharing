@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Meal from "./Meal";
 import styles from "./meals.module.css";
 
-export default function MealsList() {
+export default function MealsList({ limit }) {
   const [meals, setMeals] = useState([]);
 
   useEffect(() => {
@@ -16,9 +16,11 @@ export default function MealsList() {
     fetchData([]);
   }, []);
 
+  const displayedMeals = limit ? meals.slice(0, limit) : meals;
+
   return (
     <div className={styles.mealsGrid}>
-      {meals.map((meal) => (
+      {displayedMeals.map((meal) => (
         <Meal key={meal.id} meal={meal} />
       ))}
     </div>
