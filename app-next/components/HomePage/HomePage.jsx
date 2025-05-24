@@ -7,7 +7,6 @@ import styles from "../meals.module.css";
 function HomePage() {
   return (
     <>
-      <nav className="navbar">Navbar Placeholder</nav>
       <main className="main">
         <section className={styles.mealsContainer}>
           <MealsList />

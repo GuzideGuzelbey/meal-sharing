@@ -1,13 +1,23 @@
 import "./globals.css";
+import { ThemeProvider } from "@mui/material/styles";
+import Header from "@/components/Header";
+import CssBaseline from "@mui/material/CssBaseline";
+import ThemeRegistry from "@/components/ThemeRegistry";
 
 export const metadata = {
-  title: "HackYourFuture",
+  title: "MealSharing",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeRegistry>
+          <CssBaseline />
+          <Header />
+          {children}
+        </ThemeRegistry>
+      </body>
     </html>
   );
 }
