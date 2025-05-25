@@ -1,14 +1,10 @@
-import MealDetail from "./MealDetail";
 import styles from "./meals.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Meal({ meal }) {
   console.log("Meal object:", meal);
   const imageSrc = meal.image ? `/${meal.image.trim()}` : null;
-
-  const openCardDetails = () => {
-    return <MealDetail />;
-  };
 
   const addReview = () => {
     return <p>Will be implemented</p>;
@@ -37,9 +33,10 @@ export default function Meal({ meal }) {
         <p>
           <b>{meal.price}dkk</b>
         </p>
-        <button className={styles.button} onClick={() => openCardDetails()}>
-          Book a Meal
-        </button>
+        <Link href={`/meals/${meal.id}`} passHref>
+          <button className={styles.button}>Book a Meal</button>
+        </Link>
+
         <button className={styles.button} onClick={() => addReview()}>
           Add Review
         </button>
