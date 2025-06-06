@@ -17,6 +17,7 @@ mealsRouter.get("/", async (req, res) => {
       "meal.price",
       "meal.created_date",
       "meal.image",
+      "meal.total_reserved",
     ]);
 
     // maxPrice query parameter
@@ -154,11 +155,20 @@ mealsRouter.post("/", async (req, res) => {
 mealsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const meal = await knex("meal").select("*").where({ id }).first();
+    const result = await knex.raw(
+      `
+      SELECT meal.*
+      FROM meal
+      WHERE meal.id = ?
+    `,
+      [id]
+    );
+    const meal = result[0][0];
+
     if (!meal) {
       return res.status(404).json({ error: "Meal not found" });
     }
-    res.status(200).json({ id, meal });
+    res.status(200).json({ meal });
     console.log(meal);
   } catch (error) {
     console.error("DB query failed:", error);
