@@ -139,6 +139,16 @@ mealsRouter.get("/", async (req, res) => {
 // POST New Meal
 mealsRouter.post("/", async (req, res) => {
   const newMeal = req.body;
+
+  if (newMeal.when) {
+    newMeal.when = formatToMySQLDatetime(newMeal.when);
+  }
+  if (newMeal.created_date) {
+    newMeal.created_date = formatToMySQLDatetime(newMeal.created_date);
+  } else {
+    newMeal.created_date = formatToMySQLDatetime(new Date());
+  }
+
   try {
     const [id] = await knex("meal").insert(newMeal);
     console.log(id);
