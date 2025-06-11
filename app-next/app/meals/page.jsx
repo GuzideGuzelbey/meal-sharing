@@ -1,8 +1,7 @@
 "use client";
 
-import MealsList from "@/components/MealsList";
+import MealsList from "../../components/MealsPage/MealsList";
 import { Container, Box } from "@mui/material";
-import Link from "next/link";
 import { useTheme } from "@mui/material/styles";
 
 export default function HomePage() {
