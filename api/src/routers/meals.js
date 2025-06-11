@@ -188,13 +188,25 @@ mealsRouter.get("/:id", async (req, res) => {
   }
 });
 
+function formatToMySQLDatetime(input) {
+  const d = new Date(input);
+  if (isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 19).replace("T", " ");
+}
+
 // PUT Update the meal by id
 mealsRouter.put("/:id", async (req, res) => {
   const { id } = req.params;
   const updatedMeal = req.body;
+  if (updatedMeal.when) {
+    updatedMeal.when = formatToMySQLDatetime(updatedMeal.when);
+  }
+  if (updatedMeal.created_date) {
+    updatedMeal.created_date = formatToMySQLDatetime(updatedMeal.created_date);
+  }
   try {
-    const meal = await knex("meal").where({ id }).update(updatedMeal);
-    if (!meal) {
+    const updated = await knex("meal").where({ id }).update(updatedMeal);
+    if (!updated) {
       return res.status(404).json({ error: "Meal not found" });
     }
     res.status(200).json({ updatedMeal });
