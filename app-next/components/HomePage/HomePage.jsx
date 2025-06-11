@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
-import MealsList from "../MealsList";
+import MealsList from "../MealsPage/MealsList";
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 
