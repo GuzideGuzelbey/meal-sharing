@@ -52,14 +52,31 @@ reservationsRouter.post("/", async (req, res) => {
 reservationsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const reservation = await knex("reservation")
-      .select("*")
-      .where({ id })
-      .first();
-    if (!reservation) {
-      return res.status(404).json({ error: "Reservation not found" });
+    const [meal] = await knex.raw(
+      `
+      SELECT meal.*,
+        COALESCE((
+          SELECT SUM(number_of_guests)
+          FROM reservation
+          WHERE meal_id = meal.id
+        ), 0) AS total_reserved
+      FROM meal
+      WHERE meal.id = ?
+        AND meal.max_reservations > (
+          SELECT COALESCE(SUM(number_of_guests), 0)
+          FROM reservation
+          WHERE meal_id = meal.id
+        )
+      `,
+      [id]
+    );
+
+    if (!meal || meal.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "Meal not found or no available reservations" });
     }
-    res.status(200).json({ id, reservation });
+    res.status(200).json(meal[0]);
     console.log(reservation);
   } catch (error) {
     console.error("DB query failed:", error.message);
