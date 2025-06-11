@@ -18,7 +18,22 @@ reservationsRouter.get("/", async (req, res) => {
 
 // POST New Reservation
 reservationsRouter.post("/", async (req, res) => {
-  const newReservation = req.body;
+  const {
+    contact_name,
+    contact_email,
+    contact_phonenumber,
+    meal_id,
+    number_of_guests,
+  } = req.body;
+  const newReservation = {
+    contact_name,
+    contact_email,
+    contact_phonenumber,
+    meal_id,
+    number_of_guests,
+    created_date: new Date().toISOString().slice(0, 19).replace("T", " "),
+  };
+
   try {
     const reservationID = await knex("reservation").insert(newReservation);
     console.log(newReservation);
