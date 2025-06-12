@@ -143,16 +143,32 @@ export default function MealDetailPage() {
         </Alert>
       )}
 
-      {status === "success" && (
-        <Alert sx={{ mt: 2 }} severity="success">
-          Reservation successful!
-        </Alert>
-      )}
-      {status === "error" && (
-        <Alert sx={{ mt: 2 }} severity="error">
-          Something went wrong.
-        </Alert>
-      )}
+      <Dialog open={status !== null} onClose={handleCloseDialog}>
+        <DialogTitle>
+          {status === "success"
+            ? "Reservation Confirmed"
+            : "Reservation Failed"}
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseDialog}
+            size="small"
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {status === "success"
+              ? "Your reservation has been successfully submitted!"
+              : "Something went wrong while trying to make your reservation."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Box textAlign="center" mt={5}>
         <Link href="/meals" passHref>
