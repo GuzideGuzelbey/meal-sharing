@@ -1,13 +1,10 @@
 "use client";
-import { useState } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
-import MealsList from "../MealsPage/MealsList";
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
 
 export default function HomePage() {
   const theme = useTheme();
-  const [showAll, setShowAll] = useState(false);
 
   const handleShowMore = () => setShowAll(true);
 
@@ -47,8 +44,6 @@ export default function HomePage() {
           </Typography>
         </Box>
 
-        <MealsList limit={showAll ? undefined : 3} />
-
         <Box sx={{ marginTop: theme.spacing(4) }}>
           <Link href="/meals" passHref>
             <Button
@@ -64,7 +59,7 @@ export default function HomePage() {
                 },
               }}
             >
-              Show More...
+              Go to Meals
             </Button>
           </Link>
         </Box>
