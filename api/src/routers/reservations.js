@@ -77,7 +77,6 @@ reservationsRouter.get("/:id", async (req, res) => {
         .json({ error: "Meal not found or no available reservations" });
     }
     res.status(200).json(meal[0]);
-    console.log(reservation);
   } catch (error) {
     console.error("DB query failed:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
