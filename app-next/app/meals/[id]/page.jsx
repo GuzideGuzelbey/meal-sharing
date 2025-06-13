@@ -11,30 +11,47 @@ import {
   Button,
   Container,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  IconButton,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 export default function MealDetailPage() {
   const { id } = useParams();
-  const theme = useTheme();
 
   const [meal, setMeal] = useState(null);
-  const [form, setForm] = useState({ name: "", email: "", phonenumber: "" });
+  const [form, setForm] = useState({
+    contact_name: "",
+    contact_email: "",
+    contact_phonenumber: "",
+    number_of_guests: 1,
+  });
   const [status, setStatus] = useState(null);
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     const fetchMeal = async () => {
-      const response = await fetch(
-        `http://localhost:3001/api/reservations/${id}`
-      );
-      const data = await response.json();
-      setMeal(data);
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/reservations/${id}`
+        );
+        const data = await response.json();
+        setMeal(data);
+      } catch (error) {
+        console.error("Error fetching meal:", error);
+      }
     };
     fetchMeal();
-  }, [id]);
+  }, [id, updated]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = ({ target: { name, value } }) => {
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "number_of_guests" ? Number(value) : value,
+    }));
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,18 +63,30 @@ export default function MealDetailPage() {
         body: JSON.stringify({ ...form, meal_id: id }),
       });
 
-      if (res.ok) {
-        setStatus("success");
-        setForm({ name: "", email: "", phonenumber: "" });
-      } else {
-        throw new Error("Reservation failed");
-      }
+      if (!res.ok) throw new Error("Reservation failed");
+
+      await fetch(`http://localhost:3001/api/meals/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          total_reserved:
+            Number(meal.total_reserved || 0) + form.number_of_guests,
+        }),
+      });
+
+      setStatus("success");
+      setForm({
+        contact_name: "",
+        contact_email: "",
+        contact_phonenumber: "",
+        number_of_guests: 1,
+      });
+      setUpdated((prev) => !prev);
     } catch (err) {
+      console.error("Reservation error:", err);
       setStatus("error");
     }
   };
-
-  console.log("Meal object from API:", meal);
 
   if (!meal) {
     return (
@@ -76,8 +105,7 @@ export default function MealDetailPage() {
     );
   }
 
-  const remainingSeats =
-    Number(meal.max_reservations) - Number(meal.total_reserved || 0);
+  const remainingSeats = meal.max_reservations - (meal.total_reserved || 0);
 
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>
@@ -112,24 +140,26 @@ export default function MealDetailPage() {
             onSubmit={handleSubmit}
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
+            {[
+              { label: "Name", name: "contact_name" },
+              { label: "Email", name: "contact_email" },
+              { label: "Phone Number", name: "contact_phonenumber" },
+            ].map(({ label, name }) => (
+              <TextField
+                key={name}
+                label={label}
+                name={name}
+                value={form[name]}
+                onChange={handleChange}
+                required
+              />
+            ))}
             <TextField
-              label="Name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              label="Phone Number"
-              name="phonenumber"
-              value={form.phonenumber}
+              label="Number of Guests"
+              name="number_of_guests"
+              type="number"
+              inputProps={{ min: 1, max: remainingSeats }}
+              value={form.number_of_guests}
               onChange={handleChange}
               required
             />
@@ -144,14 +174,14 @@ export default function MealDetailPage() {
         </Alert>
       )}
 
-      <Dialog open={status !== null} onClose={handleCloseDialog}>
+      <Dialog open={status !== null} onClose={() => setStatus(null)}>
         <DialogTitle>
           {status === "success"
             ? "Reservation Confirmed"
             : "Reservation Failed"}
           <IconButton
             aria-label="close"
-            onClick={handleCloseDialog}
+            onClick={() => setStatus(null)}
             size="small"
           >
             <CloseIcon />
@@ -165,12 +195,11 @@ export default function MealDetailPage() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} autoFocus>
+          <Button onClick={() => setStatus(null)} autoFocus>
             OK
           </Button>
         </DialogActions>
       </Dialog>
-
       <Box textAlign="center" mt={5}>
         <Link href="/meals" passHref>
           <Button variant="outlined" color="primary">
