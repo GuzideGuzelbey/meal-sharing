@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Typography,
