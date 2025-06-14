@@ -17,10 +17,13 @@ reviewsRouter.get("/", async (req, res) => {
 });
 
 // GET All reviews for a specific meal
-reviewsRouter.get("/:id", async (req, res) => {
-  const ID = req.params.id;
+reviewsRouter.get("/meal/:meal_id", async (req, res) => {
+  const mealID = req.params.meal_id;
   try {
-    const review = await knex("review").select("*").where({ id: ID }).first();
+    const review = await knex("review")
+      .select("*")
+      .where({ meal_id: mealID })
+      .first();
     if (!review) {
       return res.status(404).json({ error: "review not found" });
     }
@@ -34,7 +37,10 @@ reviewsRouter.get("/:id", async (req, res) => {
 
 // POST New review
 reviewsRouter.post("/", async (req, res) => {
-  const newreview = req.body;
+  const newreview = {
+    ...req.body,
+    created_date: new Date().toISOString().slice(0, 19).replace("T", " "),
+  };
   try {
     const reviewID = await knex("review").insert(newreview);
     console.log(newreview);
