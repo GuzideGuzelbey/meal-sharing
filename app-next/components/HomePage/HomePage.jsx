@@ -6,8 +6,6 @@ import Link from "next/link";
 export default function HomePage() {
   const theme = useTheme();
 
-  const handleShowMore = () => setShowAll(true);
-
   return (
     <Box
       component="main"
@@ -44,11 +42,16 @@ export default function HomePage() {
           </Typography>
         </Box>
 
-        <Box sx={{ marginTop: theme.spacing(4) }}>
+        <Box
+          sx={{
+            marginTop: theme.spacing(4),
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <Link href="/meals" passHref>
             <Button
               variant="outlined"
-              onClick={handleShowMore}
               sx={{
                 fontSize: theme.typography.navItem.fontSize,
                 fontWeight: theme.typography.navItem.fontWeight,
