@@ -9,7 +9,6 @@ import {
   IconButton,
   Stack,
   Button,
-  InputBase,
   Drawer,
   List,
   ListItem,
@@ -18,7 +17,6 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import RestaurantSharpIcon from "@mui/icons-material/RestaurantSharp";
 import { usePathname } from "next/navigation";
 
@@ -31,7 +29,6 @@ export default function Header() {
   const navItems = [
     { label: "Home", path: "/" },
     { label: "Meals", path: "/meals" },
-    { label: "Reservations", path: "/reservations" },
     { label: "Wanna Host?", path: "/host" },
   ];
 
@@ -182,45 +179,6 @@ export default function Header() {
               </List>
             </Drawer>
           </>
-        )}
-        {!isMobile && (
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            sx={{
-              backgroundColor: "rgba(223, 223, 223, 0.3)",
-              borderRadius: theme.shape.borderRadius,
-              paddingX: 1,
-              paddingY: 0.5,
-              borderColor: "rgba(191, 191, 191, 0.81)",
-              display: "flex",
-              alignItems: "center",
-              transition: "background-color 0.3s ease",
-              "&:hover": {
-                backgroundColor: theme.palette.secondary.main,
-              },
-            }}
-          >
-            <InputBase
-              placeholder="Search..."
-              sx={{
-                color: "rgba(191, 191, 191, 0.81)",
-                width: "100%",
-                fontSize: theme.typography.body1.fontSize,
-                "&:hover": {
-                  color: theme.palette.primary.main,
-                },
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-            <SearchIcon
-              sx={{
-                color: theme.palette.primary.main,
-                fontSize: theme.typography.h6.fontSize,
-              }}
-            />
-          </Box>
         )}
       </Toolbar>
     </AppBar>
