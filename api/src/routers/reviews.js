@@ -37,7 +37,10 @@ reviewsRouter.get("/meal/:meal_id", async (req, res) => {
 
 // POST New review
 reviewsRouter.post("/", async (req, res) => {
-  const newreview = req.body;
+  const newreview = {
+    ...req.body,
+    created_date: new Date().toISOString().slice(0, 19).replace("T", " "),
+  };
   try {
     const reviewID = await knex("review").insert(newreview);
     console.log(newreview);
