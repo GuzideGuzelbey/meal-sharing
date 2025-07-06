@@ -1,18 +1,17 @@
-"use client";
-
+import HYFLogo from "@/assets/hyf.svg";
+import Image from "next/image";
 import "./HomePage.css";
-import MealsList from "../MealsList";
-import styles from "../meals.module.css";
 
+// Feel free to replace the content of this component with your own
 function HomePage() {
   return (
     <>
-      <main className="main">
-        <section className={styles.mealsContainer}>
-          <MealsList />
-        </section>
-        <footer className="footerish">Footer Placeholder</footer>
-      </main>
+      <a href="https://www.hackyourfuture.dk/" target="_blank" className="link">
+        <Image src={HYFLogo.src} width={HYFLogo.width} height={HYFLogo.height} className="logo" />
+      </a>
+      <a href="/nested" className="link">
+        <span className="message">Go to the nested page</span>
+      </a>
     </>
   );
 }
