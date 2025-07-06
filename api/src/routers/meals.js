@@ -16,6 +16,7 @@ mealsRouter.get("/", async (req, res) => {
       "meal.max_reservations",
       "meal.price",
       "meal.created_date",
+      "meal.image",
     ]);
 
     // maxPrice query parameter

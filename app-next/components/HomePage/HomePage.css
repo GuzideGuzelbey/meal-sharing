@@ -1,9 +1,33 @@
-.link {
-  display: flex;
-  margin: 5vh 0;
+.navbar {
+  background-color: rgba(109, 144, 22, 0.844);
+  min-height: 5vh;
+  padding: 1rem;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: bisque;
+  font-size: 2.5rem;
+  text-align: center;
 }
 
-.logo,
-.message {
-  margin: auto;
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+}
+
+.footerish {
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(123, 162, 24);
+  color: bisque;
+  font-size: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+  padding: 1rem;
+  margin-top: auto;
 }
